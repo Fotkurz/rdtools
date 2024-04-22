@@ -1,0 +1,13 @@
+[package]
+name = "jwtparser"
+version = "0.1.0"
+edition = "2021"
+description = "JWT Parsing cli"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+base64 = "0.22.0"
+clap = { version = "4.5.4", features = ["derive"] }
+colored = "2.1.0"
+serde_json = "1.0.116"
