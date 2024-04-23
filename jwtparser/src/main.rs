@@ -61,10 +61,10 @@ fn parse_jwt(data: String) -> Token {
     let splitted: Vec<&str> = data.split(".").collect();
 
     if splitted.len() != 3 {
-        panic!("Failed to parse the token from string");
+        panic!("Failed to parse token, err: this is not a JWT token");
     }
-    // TODO: proper error handling
-    
+
+    // TODO: proper error handling for serde_json::from_str
     let header: Value = serde_json::from_str(
         decode(splitted[0]).as_str()
     ).unwrap();
@@ -75,6 +75,7 @@ fn parse_jwt(data: String) -> Token {
     Token {
         header: serde_json::to_string_pretty(&header).unwrap(),
         payload: serde_json::to_string_pretty(&payload).unwrap(),
+        // TODO: check signature
         signature: splitted[2].to_owned()
     }
 }
