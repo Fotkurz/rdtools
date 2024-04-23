@@ -1,7 +1,7 @@
 ## Taken from https://dev.to/petr7555/github-action-for-multi-project-rust-repository-28d5
 ## Thanks to https://dev.to/petr7555
 
-name: Build
+name: Build, Test and Clippy all
 
 on:
   pull_request:
