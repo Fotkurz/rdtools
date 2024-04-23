@@ -1,7 +1,7 @@
-use std::{fs, path::Path};
+use std::fs;
 
 use base64::prelude::*;
-use clap::{Parser};
+use clap::Parser;
 use serde_json::Value;
 use colored::Colorize;
 
@@ -14,31 +14,42 @@ struct Token {
 #[derive(Parser)]
 #[command(version, about, long_about)]
 struct Cli {
-    /// parse from cli. (Ex: jwtparser "eyJhbGciOiJIUzI1NiIsInR5c...")
+    /// parse from arg. (Ex: jwtparser "eyJhbGciOiJIUzI1NiIsInR5c...")
     data: Option<String>,
-
+    /// parses from file. (Ex: jwtparser --file file.txt)
     #[arg(short, long)]
     file: Option<String>,
 }
 
 fn main() {
+    // parses cli args
     let cli = Cli::parse();
 
     let mut contents = "".to_owned();
     let mut file_path = "".to_owned();
     
+    // reads the data arg
     if let Some(data) = cli.data.as_deref() {
         contents = data.to_owned();
+    // reads the file arg
     } else if let Some(file) = cli.file.as_deref() {
         file_path = file.to_owned();
+    } else {
+        panic!("you should inform the token via arg directly or via file")
     }
 
     if contents.is_empty() {
-        contents = fs::read_to_string(file_path).expect("Should have been able to read the file");
+        // reads from file
+        let read_result = fs::read_to_string(&file_path);
+
+        contents = match read_result {
+            Ok(res) => res,
+            Err(err) => panic!("Could not read file {}, err: {:?}", file_path, err)
+        }
     }
 
     let res = parse_jwt(contents);
-
+    
     let header_msg = format!("Header: {}", res.header);
     let payload_msg = format!("Payload: {}", res.payload);
     let signature_msg = format!("Signature: {}", res.signature);
@@ -53,8 +64,13 @@ fn parse_jwt(data: String) -> Token {
         panic!("Failed to parse the token from string");
     }
     // TODO: proper error handling
-    let header: Value = serde_json::from_str(decode(splitted[0]).as_str()).unwrap();
-    let payload: Value = serde_json::from_str(decode(splitted[1]).as_str()).unwrap();
+    
+    let header: Value = serde_json::from_str(
+        decode(splitted[0]).as_str()
+    ).unwrap();
+    let payload: Value = serde_json::from_str(
+        decode(splitted[1]).as_str()
+    ).unwrap();
 
     Token {
         header: serde_json::to_string_pretty(&header).unwrap(),
@@ -68,7 +84,6 @@ fn decode(b64_data: &str) -> String {
 
     let decoded = match wrapped {
         Ok(res) => {
-            // TODO: Proper error handling
             String::from_utf8(res).unwrap()
         },
         Err(err) => {
