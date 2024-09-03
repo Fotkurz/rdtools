@@ -7,18 +7,21 @@ use serde_json::Value;
 #[cfg(test)]
 mod tests;
 
-pub struct JwtTool {
-    pub data: String,
-    pub file: String,
-}
-
+/// Defines the JWT token structure
 struct Token {
     header: String,
     payload: String,
     signature: String,
 }
 
+/// Defines the jwt tool and its fields
+pub struct JwtTool {
+    pub data: String,
+    pub file: String,
+}
+
 impl JwtTool {
+    /// Runs the cli command
     pub fn run(&self) {
         let mut contents = self.data.clone();
 

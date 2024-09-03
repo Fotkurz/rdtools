@@ -48,7 +48,7 @@ fn main() {
             .run();
         }
         None => {
-            println!("Select at least one of the tools")
+            panic!("Select at least one of the tools");
         }
     }
 }
