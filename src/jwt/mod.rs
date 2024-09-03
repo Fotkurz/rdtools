@@ -28,7 +28,7 @@ impl JwtTool {
 
             contents = match read_result {
                 Ok(res) => res,
-                Err(err) => panic!("Could not read file {}, error: {:?}", self.file, err),
+                Err(err) => panic!("Could not read file {}, err: {:?}", self.file, err),
             }
         }
 

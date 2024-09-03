@@ -1,8 +1,8 @@
 use clap::{Parser, Subcommand};
 
-mod jwtparser;
+mod jwt;
 
-use jwtparser::JwtTool;
+use jwt::JwtTool;
 
 #[derive(Parser)]
 #[command(version, about, long_about)]

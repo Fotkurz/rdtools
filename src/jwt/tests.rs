@@ -1,4 +1,4 @@
-use crate::jwtparser::{JwtTool, Token};
+use crate::jwt::{JwtTool, Token};
 
 #[test]
 fn should_decode_the_base64_and_return_as_string() {
