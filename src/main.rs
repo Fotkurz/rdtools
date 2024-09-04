@@ -1,8 +1,8 @@
 use clap::{Parser, Subcommand};
 
-mod jwtparser;
+mod jwt;
 
-use jwtparser::JwtArgs;
+use jwt::JwtTool;
 
 #[derive(Parser)]
 #[command(version, about, long_about)]
@@ -34,18 +34,21 @@ fn main() {
     let cli = Cli::parse();
 
     match &cli.tool {
-        Some(Tools::Jwt { token: data, file }) => jwtparser::run(JwtArgs {
-            data: match data {
-                Some(v) => v.to_owned(),
-                None => "".to_owned(),
-            },
-            file: match file {
-                Some(v) => v.to_owned(),
-                None => "".to_owned(),
-            },
-        }),
+        Some(Tools::Jwt { token: data, file }) => {
+            JwtTool {
+                data: match data {
+                    Some(v) => v.to_owned(),
+                    None => "".to_owned(),
+                },
+                file: match file {
+                    Some(v) => v.to_owned(),
+                    None => "".to_owned(),
+                },
+            }
+            .run();
+        }
         None => {
-            println!("Select at least one of the tools")
+            panic!("Select at least one of the tools");
         }
     }
 }
