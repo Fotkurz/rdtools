@@ -27,7 +27,7 @@ impl JwtTool {
 
         if self.data.is_empty() {
             // reads from file
-            let read_result = fs::read_to_string(&self.file.clone());
+            let read_result = fs::read_to_string(self.file.clone());
 
             contents = match read_result {
                 Ok(res) => res,
