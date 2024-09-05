@@ -1,0 +1,12 @@
+[package]
+name = "rdtools"
+version = "0.0.1"
+edition = "2021"
+description = "Development tools written in rust"
+
+[dependencies]
+base64 = "0.22.1"
+clap = { version = "4.5.4", features = ["derive"] }
+clap-cargo = "0.14.1"
+colored = "2.1.0"
+serde_json = "1.0.116"
