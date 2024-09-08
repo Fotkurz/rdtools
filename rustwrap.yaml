@@ -1,0 +1,15 @@
+# replace everything that starts with __V_
+
+targets:
+  - platform: win32
+    arch: x64
+    url_template: https://github.com/__V_REPO_NAME__/releases/download/v__VERSION__/__V_PROJECT_NAME__-x86_64-windows.zip
+  - platform: linux
+    arch: x64
+    url_template: https://github.com/__V_REPO_NAME__/releases/download/v__VERSION__/__V_PROJECT_NAME__-x86_64-linux.tar.xz
+  - platform: darwin
+    arch: x64
+    url_template: https://github.com/__V_REPO_NAME__/releases/download/v__VERSION__/__V_PROJECT_NAME__-x86_64-macos.tar.xz
+  - platform: darwin
+    arch: arm64
+    url_template: https://github.com/__V_REPO_NAME__/releases/download/v__VERSION__/__V_PROJECT_NAME__-aarch64-macos.tar.xz
