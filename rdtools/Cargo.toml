@@ -4,32 +4,6 @@ version = "0.0.1"
 edition = "2021"
 description = "Development tools written in rust"
 
-#
-# cargo binstall metadata:
-#
-
-[package.metadata.binstall.overrides.x86_64-pc-windows-msvc]
-pkg-url = "{ repo }/releases/download/v{ version }/rdtools-x86_64-windows.zip"
-bin-dir = "rdtools-x86_64-windows/rdtools.exe"
-pkg-fmt = "zip"
-
-[package.metadata.binstall.overrides.x86_64-apple-darwin]
-pkg-url = "{ repo }/releases/download/v{ version }/rdtools-x86_64-macos.tar.xz"
-bin-dir = "rdtools-x86_64-macos/rdtools"
-pkg-fmt = "txz"
-
-[package.metadata.binstall.overrides.aarch64-apple-darwin]
-pkg-url = "{ repo }/releases/download/v{ version }/rdtools-aarch64-macos.tar.xz"
-bin-dir = "rdtools-x86_64-macos/rdtools"
-pkg-fmt = "txz"
-
-[package.metadata.binstall.overrides.x86_64-unknown-linux-gnu]
-pkg-url = "{ repo }/releases/download/v{ version }/rdtools-x86_64-linux.tar.xz"
-bin-dir = "rdtools-x86_64-linux/rdtools"
-pkg-fmt = "txz"
-
-# </cargo binstall>
-
 [dependencies]
 base64 = "0.22.1"
 clap = { version = "4.5.4", features = ["derive"] }
