@@ -27,6 +27,10 @@ enum Tools {
         /// A file with a base64 encoded JWT token to decode. (e.g rdtools jwt --file data/sample.txt).
         #[arg(short, long)]
         file: Option<String>,
+
+        /// A secret to check the signature validation
+        #[arg(short, long)]
+        secret: Option<String>,
     },
 }
 
@@ -34,13 +38,21 @@ fn main() {
     let cli = Cli::parse();
 
     match &cli.tool {
-        Some(Tools::Jwt { token: data, file }) => {
+        Some(Tools::Jwt {
+            token: data,
+            file,
+            secret,
+        }) => {
             JwtTool {
                 data: match data {
                     Some(v) => v.to_owned(),
                     None => "".to_owned(),
                 },
                 file: match file {
+                    Some(v) => v.to_owned(),
+                    None => "".to_owned(),
+                },
+                secret: match secret {
                     Some(v) => v.to_owned(),
                     None => "".to_owned(),
                 },

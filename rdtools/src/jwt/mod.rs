@@ -1,7 +1,7 @@
 use std::fs;
 
 use base64::prelude::*;
-use colored::Colorize;
+use colored::{ColoredString, Colorize};
 use serde_json::Value;
 
 #[cfg(test)]
@@ -9,15 +9,17 @@ mod tests;
 
 /// Defines the JWT token structure
 struct Token {
-    header: String,
-    payload: String,
+    header: Value,
+    payload: Value,
     signature: String,
+    is_valid: bool,
 }
 
 /// Defines the jwt tool and its fields
 pub struct JwtTool {
     pub data: String,
     pub file: String,
+    pub secret: String,
 }
 
 impl JwtTool {
@@ -35,18 +37,21 @@ impl JwtTool {
             }
         }
 
-        let res = JwtTool::parse_jwt(contents);
+        let mut token = JwtTool::parse_jwt(contents);
 
-        let header_msg = format!("Header: {}", res.header);
-        let payload_msg = format!("Payload: {}", res.payload);
-        let signature_msg = format!("Signature: {}", res.signature);
+        if !self.secret.is_empty() {
+            token.is_valid = JwtTool::validate(
+                &token.signature,
+                &self.secret,
+                &token.header.get("alg").unwrap().to_string(),
+            );
+        }
 
-        println!(
-            "{},\n{},\n{}",
-            header_msg.blue(),
-            payload_msg.green(),
-            signature_msg.yellow()
-        );
+        if self.secret.is_empty() {
+            JwtTool::print_final(token, false);
+        } else {
+            JwtTool::print_final(token, true)
+        }
     }
 
     fn parse_jwt(data: String) -> Token {
@@ -61,10 +66,11 @@ impl JwtTool {
         let payload: Value = serde_json::from_str(JwtTool::decode(splitted[1]).as_str()).unwrap();
 
         Token {
-            header: serde_json::to_string_pretty(&header).unwrap(),
-            payload: serde_json::to_string_pretty(&payload).unwrap(),
+            header,
+            payload,
             // TODO: check signature
             signature: splitted[2].to_owned(),
+            is_valid: false,
         }
     }
 
@@ -77,5 +83,37 @@ impl JwtTool {
                 panic!("Failed to decode token: {:?}", err)
             }
         }
+    }
+
+    fn validate(signature: &String, secret: &String, alg: &String) -> bool {
+        true
+    }
+
+    fn print_final(token: Token, print_valid: bool) {
+        let mut msg = format!(
+            "{},\n{},\n{}",
+            format!(
+                "Header: {}",
+                serde_json::to_string_pretty(&token.header).unwrap()
+            )
+            .blue(),
+            format!(
+                "Payload: {}",
+                serde_json::to_string_pretty(&token.payload).unwrap()
+            )
+            .green(),
+            format!("Signature: {}", token.signature).yellow()
+        );
+
+        if print_valid {
+            let mut is_valid_msg = format!("Is valid: {}", token.is_valid).red();
+            if token.is_valid {
+                is_valid_msg = is_valid_msg.green();
+            }
+
+            msg = format!("{},\n{}", msg, is_valid_msg);
+        }
+
+        println!("{}", msg);
     }
 }
